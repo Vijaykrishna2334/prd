@@ -693,8 +693,23 @@ Introduce yourself briefly, then ask the user to describe their app idea in one 
                 addMessage('assistant', assistantMessage);
                 conversationHistory.push({ role: 'model', parts: [{ text: assistantMessage }] });
 
-                // Check if PRD was generated
-                if (assistantMessage.includes('# CONTENTS') || assistantMessage.includes('## 📝 Abstract')) {
+                // Check if PRD was generated - look for various PRD indicators
+                const prdIndicators = [
+                    '# CONTENTS',
+                    '## 📝 Abstract',
+                    'Product Requirements Document',
+                    'PRD:',
+                    '### **1. Introduction & Vision**',
+                    '**1. Introduction & Vision**',
+                    'Problem Statement',
+                    'Goals & Success Metrics'
+                ];
+
+                const isPRD = prdIndicators.some(indicator =>
+                    assistantMessage.includes(indicator)
+                );
+
+                if (isPRD && assistantMessage.length > 1000) {
                     generatedPRD = assistantMessage;
                     downloadPrdBtn.disabled = false;
                 }
