@@ -60,3 +60,5 @@ Then visit http://localhost:8000.
 ## Notes
 - The API key is used client-side. Do not share or commit secrets.
 - Internet access is required for Google Fonts and Gemini API calls.
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=80&section=footer" width="100%"/>
