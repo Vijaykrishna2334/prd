@@ -1,920 +1,1885 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRD to Prototype</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PRD → Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface2: #1a1a1a;
+  --border: #2a2a2a;
+  --border2: #333;
+  --accent: #e8ff47;
+  --accent2: #ff6b35;
+  --text: #f0f0f0;
+  --text2: #888;
+  --text3: #555;
+  --user-bubble: #1c1c1c;
+  --ai-bubble: #161616;
+  --radius: 12px;
+  --font-mono: 'DM Mono', monospace;
+  --font-serif: 'Instrument Serif', serif;
+  --font-sans: 'DM Sans', sans-serif;
+}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: white;
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            width: 100%;
-        }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 2.5rem;
-            color: #000;
-        }
+/* ─── HEADER ─── */
+.header {
+  padding: 32px 40px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.header-left { display:flex; align-items:baseline; gap:12px; }
+.logo {
+  font-family: var(--font-serif);
+  font-size: 1.9rem;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.logo span { color: var(--accent); font-style:italic; }
+.badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  background: var(--accent);
+  color: #000;
+  border-radius: 4px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
-        .api-key-section {
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+/* ─── API CONFIG BAR ─── */
+.config-bar {
+  padding: 16px 40px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.config-bar label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.config-bar input, .config-bar select {
+  flex: 1;
+  min-width: 180px;
+  max-width: 340px;
+  padding: 9px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.config-bar input:focus, .config-bar select:focus { border-color: var(--accent); }
+.config-bar select option { background: var(--surface2); }
+.config-divider {
+  width: 1px; height: 28px;
+  background: var(--border2);
+}
 
-        .api-key-section input {
-            width: 100%;
-            max-width: 500px;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            margin-top: 10px;
-        }
+/* ─── TABS ─── */
+.tabs {
+  display: flex;
+  padding: 0 40px;
+  border-bottom: 1px solid var(--border);
+  gap: 0;
+}
+.tab {
+  padding: 16px 28px;
+  background: transparent;
+  color: var(--text3);
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tab:hover { color: var(--text2); }
+.tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.tab .step-num {
+  width: 20px; height: 20px;
+  background: var(--border2);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+}
+.tab.active .step-num { background: var(--accent); color: #000; }
 
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #ddd;
-        }
+/* ─── MAIN LAYOUT ─── */
+.main { padding: 32px 40px; }
 
-        .tab {
-            padding: 12px 30px;
-            background-color: white;
-            color: #666;
-            border: none;
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
+/* ─── TAB CONTENT ─── */
+.tab-content { display:none; }
+.tab-content.active { display:block; }
 
-        .tab:hover {
-            color: #000;
-        }
+/* ─── CHAT AREA ─── */
+.chat-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  height: calc(100vh - 280px);
+  min-height: 520px;
+}
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.chat-panel-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.chat-panel-header span {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text2);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--text3);
+}
+.status-dot.active { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
 
-        .tab.active {
-            color: #000;
-            border-bottom-color: #000;
-            font-weight: 600;
-        }
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+}
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
-        .tab-content {
-            display: none;
-        }
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 86%;
+  animation: msg-in 0.25s ease;
+}
+@keyframes msg-in {
+  from { opacity:0; transform:translateY(6px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.message.user { align-self: flex-end; }
+.message.assistant { align-self: flex-start; }
 
-        .tab-content.active {
-            display: block;
-        }
+.msg-role {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0 4px;
+}
+.message.user .msg-role { text-align: right; }
 
-        .chat-container {
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            height: 600px;
-        }
+.msg-bubble {
+  padding: 13px 16px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.message.user .msg-bubble {
+  background: var(--accent);
+  color: #000;
+  border-bottom-right-radius: 3px;
+  font-weight: 500;
+}
+.message.assistant .msg-bubble {
+  background: var(--ai-bubble);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  border-bottom-left-radius: 3px;
+  font-family: var(--font-sans);
+}
 
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+/* Markdown-ish rendering in AI bubbles */
+.message.assistant .msg-bubble h1,
+.message.assistant .msg-bubble h2,
+.message.assistant .msg-bubble h3 {
+  font-family: var(--font-serif);
+  margin: 12px 0 6px;
+  color: var(--accent);
+}
+.message.assistant .msg-bubble h1 { font-size: 1.1rem; }
+.message.assistant .msg-bubble h2 { font-size: 0.98rem; }
+.message.assistant .msg-bubble h3 { font-size: 0.9rem; }
+.message.assistant .msg-bubble code {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  background: var(--surface2);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.message.assistant .msg-bubble table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 8px 0;
+  font-size: 0.8rem;
+}
+.message.assistant .msg-bubble th,
+.message.assistant .msg-bubble td {
+  border: 1px solid var(--border2);
+  padding: 6px 10px;
+  text-align: left;
+}
+.message.assistant .msg-bubble th { background: var(--surface2); color: var(--text2); }
+.message.assistant .msg-bubble ul,
+.message.assistant .msg-bubble ol {
+  padding-left: 18px;
+  margin: 6px 0;
+}
+.message.assistant .msg-bubble li { margin: 3px 0; }
+.message.assistant .msg-bubble strong { color: var(--text); }
+.message.assistant .msg-bubble em { color: var(--text2); }
+.message.assistant .msg-bubble blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  margin: 8px 0;
+  color: var(--text2);
+  font-style: italic;
+}
+.message.assistant .msg-bubble hr {
+  border: none;
+  border-top: 1px solid var(--border2);
+  margin: 10px 0;
+}
 
-        .message {
-            margin-bottom: 15px;
-            padding: 12px;
-            border-radius: 8px;
-            max-width: 80%;
-        }
+/* typing indicator */
+.typing-indicator .msg-bubble {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 14px 18px;
+}
+.typing-dot {
+  width: 6px; height: 6px;
+  background: var(--text3);
+  border-radius: 50%;
+  animation: typing-bounce 1.2s ease infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-5px); background: var(--accent); }
+}
 
-        .message.assistant {
-            background: #f5f5f5;
-            margin-right: auto;
-        }
+/* ─── CHAT INPUT ─── */
+.chat-input-area {
+  padding: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.chat-input {
+  flex: 1;
+  padding: 11px 16px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  outline: none;
+  resize: none;
+  min-height: 42px;
+  max-height: 120px;
+  transition: border-color 0.2s;
+  line-height: 1.5;
+}
+.chat-input:focus { border-color: var(--accent); }
+.chat-input:disabled { opacity: 0.4; cursor: not-allowed; }
+.chat-input::placeholder { color: var(--text3); }
 
-        .message.user {
-            background: #000;
-            color: white;
-            margin-left: auto;
-        }
+.send-btn {
+  width: 42px; height: 42px;
+  background: var(--accent);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+.send-btn:hover:not(:disabled) { background: #d4e83e; transform: scale(1.04); }
+.send-btn:disabled { background: var(--border2); color: var(--text3); cursor: not-allowed; transform: none; }
 
-        .message-content {
-            white-space: pre-wrap;
-            line-height: 1.5;
-        }
+/* ─── SIDEBAR ─── */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-        .chat-input-container {
-            display: flex;
-            gap: 10px;
-        }
+.sidebar-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.sidebar-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sidebar-card-body {
+  padding: 14px 16px;
+  font-size: 0.82rem;
+  color: var(--text2);
+  line-height: 1.6;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.sidebar-card-body::-webkit-scrollbar { width: 3px; }
+.sidebar-card-body::-webkit-scrollbar-thumb { background: var(--border2); }
 
-        .chat-input {
-            flex: 1;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-            font-family: inherit;
-        }
+#workingNotes { font-family: var(--font-mono); font-size: 0.75rem; }
+#workingNotes .note-section { margin-bottom: 10px; }
+#workingNotes .note-label {
+  color: var(--accent);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+#workingNotes .note-item {
+  color: var(--text2);
+  padding: 3px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.72rem;
+}
+#workingNotes .empty { color: var(--text3); font-style: italic; }
 
-        .upload-section {
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
+.progress-tracker { display:flex; flex-direction:column; gap:8px; }
+.progress-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+}
+.progress-check {
+  width: 18px; height: 18px;
+  border: 1.5px solid var(--border2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+.progress-check.done {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-size: 0.6rem;
+}
+.progress-item.done .progress-label { color: var(--text2); }
+.progress-label { color: var(--text3); font-size: 0.78rem; }
 
-        .file-input-wrapper {
-            margin: 20px 0;
-        }
+/* ─── ACTION BAR ─── */
+.action-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
 
-        input[type="file"] {
-            display: none;
-        }
+.btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+}
+.btn-primary:hover:not(:disabled) { background: #d4e83e; transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent;
+  color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.btn-secondary:hover:not(:disabled) { border-color: var(--text2); color: var(--text); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
 
-        .file-label {
-            display: inline-block;
-            padding: 12px 30px;
-            background-color: black;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-        }
+/* ─── PROTOTYPE TAB ─── */
+.prototype-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  height: calc(100vh - 280px);
+  min-height: 520px;
+}
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.panel-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.panel-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+.panel-body::-webkit-scrollbar { width: 4px; }
+.panel-body::-webkit-scrollbar-thumb { background: var(--border2); }
 
-        .file-label:hover {
-            background-color: #333;
-        }
+/* Upload zone */
+.upload-zone {
+  border: 2px dashed var(--border2);
+  border-radius: var(--radius);
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  margin-bottom: 20px;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(232, 255, 71, 0.04);
+}
+.upload-icon { font-size: 2rem; margin-bottom: 12px; }
+.upload-zone p { color: var(--text2); font-size: 0.85rem; }
+.upload-zone strong { color: var(--accent); cursor: pointer; }
+input[type="file"] { display: none; }
 
-        .file-name {
-            margin-top: 10px;
-            font-size: 14px;
-            color: #666;
-        }
+.prd-text {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--text2);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.prd-placeholder { color: var(--text3); font-size: 0.85rem; text-align: center; padding: 40px 20px; }
 
-        button {
-            padding: 12px 30px;
-            background-color: black;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin: 10px 5px;
-        }
+/* prototype iframe */
+#prototypeContent {
+  width: 100%;
+  height: 100%;
+}
+#prototypeContent iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 8px;
+  background: white;
+}
+.proto-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 12px;
+  color: var(--text3);
+  font-size: 0.85rem;
+  text-align: center;
+}
+.proto-placeholder .big-icon { font-size: 3rem; }
 
-        button:hover:not(:disabled) {
-            background-color: #333;
-        }
+/* ─── PRD EDITOR MODAL ─── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  width: min(900px, 92vw);
+  height: 82vh;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+}
+.modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--text);
+}
+.modal-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text3);
+  margin-top: 2px;
+}
+.modal-close {
+  width: 32px; height: 32px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--text2);
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.modal-close:hover { border-color: var(--text2); color: var(--text); }
 
-        button:disabled {
-            background-color: #999;
-            cursor: not-allowed;
-        }
+.modal-chat {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.modal-chat::-webkit-scrollbar { width: 4px; }
+.modal-chat::-webkit-scrollbar-thumb { background: var(--border2); }
 
-        .content-wrapper {
-            display: flex;
-            gap: 20px;
-            flex: 1;
-        }
+.modal-doc-view {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.8;
+  color: var(--text2);
+  white-space: pre-wrap;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.modal-doc-view::-webkit-scrollbar { width: 4px; }
+.modal-doc-view::-webkit-scrollbar-thumb { background: var(--border2); }
+.modal-doc-view h1, .modal-doc-view h2, .modal-doc-view h3 {
+  font-family: var(--font-serif);
+  color: var(--accent);
+  margin: 16px 0 8px;
+  font-weight: 400;
+}
+.modal-doc-view table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 0.75rem;
+}
+.modal-doc-view th, .modal-doc-view td {
+  border: 1px solid var(--border2);
+  padding: 6px 10px;
+  text-align: left;
+}
+.modal-doc-view th { background: var(--surface); color: var(--text2); }
 
-        .prd-section, .prototype-section {
-            flex: 1;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            background: white;
-            overflow: auto;
-            max-height: calc(100vh - 400px);
-        }
+.modal-footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.modal-input {
+  flex: 1;
+  padding: 10px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.modal-input:focus { border-color: var(--accent); }
+.modal-input::placeholder { color: var(--text3); }
 
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #000;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-        }
+.modal-tab-bar {
+  display: flex;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.modal-tab {
+  flex: 1;
+  padding: 10px;
+  background: transparent;
+  border: none;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 2px solid transparent;
+}
+.modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
 
-        .prd-content {
-            white-space: pre-wrap;
-            font-family: monospace;
-            font-size: 14px;
-            line-height: 1.6;
-        }
+/* ─── NOTIFICATIONS ─── */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 0.83rem;
+  color: var(--text);
+  display: none;
+  gap: 10px;
+  align-items: center;
+  z-index: 9999;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: toast-in 0.3s ease;
+  max-width: 320px;
+}
+.toast.show { display: flex; }
+.toast.success { border-color: var(--accent); }
+.toast.error { border-color: #ff4444; }
+@keyframes toast-in {
+  from { transform: translateY(12px); opacity:0; }
+  to { transform: translateY(0); opacity:1; }
+}
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 18px;
-            color: #666;
-        }
+/* ─── ERROR ─── */
+.error-msg {
+  background: rgba(255,68,68,0.08);
+  border: 1px solid rgba(255,68,68,0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #ff6b6b;
+  font-size: 0.82rem;
+  margin: 12px 0;
+}
 
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #000;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
+/* ─── GENERATING STATE ─── */
+.generating-overlay {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px;
+  text-align: center;
+}
+.generating-overlay.show { display: flex; }
+.gen-spinner {
+  width: 36px; height: 36px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.gen-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text2);
+  letter-spacing: 0.04em;
+}
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .error {
-            color: #d32f2f;
-            padding: 15px;
-            background: #ffebee;
-            border-radius: 4px;
-            margin: 10px 0;
-            border-left: 4px solid #d32f2f;
-        }
-
-        .prototype-iframe-container {
-            width: 100%;
-            height: 100%;
-            min-height: 500px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background: white;
-        }
-
-        .prd-actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-    </style>
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  .header, .config-bar, .main { padding-left: 20px; padding-right: 20px; }
+  .chat-layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .prototype-layout { grid-template-columns: 1fr; }
+  .tabs { padding: 0 20px; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>PRD to Prototype</h1>
 
-        <div class="api-key-section">
-            <label for="apiKey">
-                <strong>Gemini API Key:</strong>
-                <input
-                    type="password"
-                    id="apiKey"
-                    placeholder="Enter your Gemini API key"
-                    autocomplete="off"
-                />
-            </label>
+<!-- ─── HEADER ─── -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo">PRD <span>→</span> Prototype</div>
+    <div class="badge">v2</div>
+  </div>
+  <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text3);">AI-Powered Product Discovery</div>
+</div>
+
+<!-- ─── CONFIG BAR ─── -->
+<div class="config-bar">
+  <label>API Key</label>
+  <input type="password" id="apiKey" placeholder="AIza..." autocomplete="off"/>
+  <div class="config-divider"></div>
+  <label>Model</label>
+  <select id="modelSelect">
+    <optgroup label="Gemini 3.x — Latest">
+      <option value="gemini-3.5-flash">Gemini 3.5 Flash ⚡ Newest · Fastest</option>
+      <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite · Lightweight</option>
+      <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro · Best Reasoning</option>
+    </optgroup>
+    <optgroup label="Gemini 2.5 — Stable GA">
+      <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash ✅ Recommended</option>
+      <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite · Budget</option>
+      <option value="gemini-2.5-pro">Gemini 2.5 Pro · High Quality</option>
+    </optgroup>
+  </select>
+  <div class="config-divider"></div>
+  <label>Temperature</label>
+  <select id="tempSelect" style="max-width:140px;">
+    <option value="0.3">0.3 — Precise</option>
+    <option value="0.7" selected>0.7 — Balanced</option>
+    <option value="1.0">1.0 — Creative</option>
+  </select>
+</div>
+
+<!-- ─── TABS ─── -->
+<div class="tabs">
+  <button class="tab active" data-tab="generate-prd">
+    <span class="step-num">1</span> Generate PRD
+  </button>
+  <button class="tab" data-tab="create-prototype">
+    <span class="step-num">2</span> Create Prototype
+  </button>
+</div>
+
+<!-- ─── MAIN CONTENT ─── -->
+<div class="main">
+
+  <!-- ══ STEP 1: GENERATE PRD ══ -->
+  <div id="generate-prd" class="tab-content active">
+    <div class="chat-layout">
+
+      <!-- Chat Panel -->
+      <div class="chat-panel">
+        <div class="chat-panel-header">
+          <span>Conversation</span>
+          <div id="statusDot" class="status-dot"></div>
         </div>
 
-        <div class="tabs">
-            <button class="tab active" data-tab="generate-prd">Step 1: Generate PRD</button>
-            <button class="tab" data-tab="create-prototype">Step 2: Create Prototype</button>
+        <div class="chat-messages" id="chatMessages">
+          <!-- Welcome state -->
+          <div id="welcomeState" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;text-align:center;padding:40px;">
+            <div style="font-family:var(--font-serif);font-size:1.5rem;color:var(--text);">Start your PRD session</div>
+            <div style="font-size:0.85rem;color:var(--text3);max-width:340px;line-height:1.6;">Enter your Gemini API key, select a model, then click <strong style="color:var(--text2);">Start Session</strong> to begin guided product discovery.</div>
+          </div>
         </div>
 
-        <!-- Generate PRD Tab -->
-        <div id="generate-prd" class="tab-content active">
-            <div class="chat-container">
-                <div class="chat-messages" id="chatMessages"></div>
-                <div class="chat-input-container">
-                    <input
-                        type="text"
-                        class="chat-input"
-                        id="chatInput"
-                        placeholder="Type your message here..."
-                        disabled
-                    />
-                    <button id="sendBtn" disabled>Send</button>
-                </div>
+        <div class="chat-input-area">
+          <textarea
+            id="chatInput"
+            class="chat-input"
+            placeholder="Type your message… (Enter to send, Shift+Enter for newline)"
+            disabled
+            rows="1"
+          ></textarea>
+          <button id="sendBtn" class="send-btn" disabled title="Send">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+
+        <!-- Progress -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Discovery Progress
+          </div>
+          <div class="sidebar-card-body">
+            <div class="progress-tracker" id="progressTracker">
+              <div class="progress-item" data-step="0"><div class="progress-check">1</div><div class="progress-label">Problem & Value</div></div>
+              <div class="progress-item" data-step="1"><div class="progress-check">2</div><div class="progress-label">User & JTBD</div></div>
+              <div class="progress-item" data-step="2"><div class="progress-check">3</div><div class="progress-label">Outcomes & KPIs</div></div>
+              <div class="progress-item" data-step="3"><div class="progress-check">4</div><div class="progress-label">Scope v1</div></div>
+              <div class="progress-item" data-step="4"><div class="progress-check">5</div><div class="progress-label">Constraints</div></div>
+              <div class="progress-item" data-step="5"><div class="progress-check">6</div><div class="progress-label">Existing Assets</div></div>
+              <div class="progress-item" data-step="6"><div class="progress-check">7</div><div class="progress-label">Risks</div></div>
+              <div class="progress-item" data-step="7"><div class="progress-check">✓</div><div class="progress-label">PRD Generated</div></div>
             </div>
-            <div class="prd-actions">
-                <button id="startChatBtn">Start PRD Generation</button>
-                <button id="downloadPrdBtn" disabled>Download PRD</button>
-            </div>
+          </div>
         </div>
 
-        <!-- Create Prototype Tab -->
-        <div id="create-prototype" class="tab-content">
-            <div class="upload-section">
-                <div class="file-input-wrapper">
-                    <input
-                        type="file"
-                        id="fileInput"
-                        accept=".txt,.md,.doc,.docx,.pdf"
-                    />
-                    <label for="fileInput" class="file-label">
-                        Choose PRD File
-                    </label>
-                    <div class="file-name" id="fileName">No file chosen</div>
-                </div>
-
-                <button id="generateBtn" disabled>Generate Prototype</button>
-            </div>
-
-            <div class="content-wrapper">
-                <div class="prd-section">
-                    <h2 class="section-title">PRD Content</h2>
-                    <div id="prdContent" class="prd-content">
-                        Upload a PRD file to see its content here...
-                    </div>
-                </div>
-
-                <div class="prototype-section">
-                    <h2 class="section-title">Generated Prototype</h2>
-                    <div id="prototypeContent" class="prototype-iframe-container">
-                        Your generated prototype will appear here...
-                    </div>
-                </div>
-            </div>
+        <!-- Working Notes -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Working Notes
+          </div>
+          <div class="sidebar-card-body" id="workingNotes">
+            <div style="color:var(--text3);font-size:0.75rem;font-style:italic;">Notes will appear as the conversation progresses…</div>
+          </div>
         </div>
+
+        <!-- Quick Actions -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">Actions</div>
+          <div class="sidebar-card-body" style="display:flex;flex-direction:column;gap:8px;padding:12px 14px;">
+            <button class="btn btn-primary" id="startChatBtn" style="width:100%;justify-content:center;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Start Session
+            </button>
+            <button class="btn btn-secondary" id="downloadPrdBtn" disabled style="width:100%;justify-content:center;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download PRD
+            </button>
+            <button class="btn btn-secondary" id="editPrdBtn" disabled style="width:100%;justify-content:center;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Edit PRD with AI
+            </button>
+            <button class="btn btn-secondary" id="resetBtn" style="width:100%;justify-content:center;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.97"/></svg>
+              Reset Session
+            </button>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </div>
 
-    <script>
-        // State management
-        let conversationHistory = [];
-        let generatedPRD = null;
-        let uploadedFileContent = null;
+  <!-- ══ STEP 2: CREATE PROTOTYPE ══ -->
+  <div id="create-prototype" class="tab-content">
+    <div class="prototype-layout">
 
-        // DOM elements
-        const apiKeyInput = document.getElementById('apiKey');
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const startChatBtn = document.getElementById('startChatBtn');
-        const downloadPrdBtn = document.getElementById('downloadPrdBtn');
-        const fileInput = document.getElementById('fileInput');
-        const fileName = document.getElementById('fileName');
-        const generateBtn = document.getElementById('generateBtn');
-        const prdContent = document.getElementById('prdContent');
-        const prototypeContent = document.getElementById('prototypeContent');
+      <!-- PRD Input Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">PRD Source</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary" id="useChatPrdBtn" style="padding:6px 12px;font-size:0.65rem;" title="Use PRD from Step 1">Use Chat PRD</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div
+            class="upload-zone"
+            id="uploadZone"
+          >
+            <div class="upload-icon">📄</div>
+            <p>Drop your PRD file here, or <strong><label for="fileInput" style="cursor:pointer;">browse</label></strong></p>
+            <p style="margin-top:6px;font-size:0.75rem;color:var(--text3);">.txt · .md · .pdf · .doc</p>
+            <input type="file" id="fileInput" accept=".txt,.md,.doc,.docx,.pdf"/>
+          </div>
+          <div id="prdDisplay">
+            <div class="prd-placeholder" id="prdPlaceholder">No PRD loaded. Upload a file or use the PRD from Step 1.</div>
+            <pre class="prd-text" id="prdContent" style="display:none;"></pre>
+          </div>
+        </div>
+      </div>
 
-        // Tab switching
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabName = tab.dataset.tab;
+      <!-- Prototype Output Panel -->
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">Generated Prototype</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary" id="exportHtmlBtn" disabled style="padding:6px 12px;font-size:0.65rem;">Export HTML</button>
+            <button class="btn btn-primary" id="generateBtn" disabled style="padding:6px 14px;font-size:0.65rem;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Generate
+            </button>
+          </div>
+        </div>
+        <div class="panel-body" id="prototypePanel">
+          <div class="proto-placeholder" id="protoPlaceholder">
+            <div class="big-icon">⚡</div>
+            <div>Load a PRD and click <strong style="color:var(--text2);">Generate</strong></div>
+            <div style="font-size:0.75rem;color:var(--text3);margin-top:4px;">The AI will build a working HTML/CSS/JS prototype</div>
+          </div>
+          <div class="generating-overlay" id="generatingOverlay">
+            <div class="gen-spinner"></div>
+            <div class="gen-label" id="genLabel">Reading PRD…</div>
+          </div>
+          <div id="prototypeContent" style="width:100%;height:100%;display:none;"></div>
+        </div>
+      </div>
 
-                // Update active tab
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
+    </div>
+  </div>
 
-                // Update active content
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.getElementById(tabName).classList.add('active');
-            });
-        });
+</div><!-- /main -->
 
-        // PRD Generation System Prompt
-        const SYSTEM_PROMPT = `You are a professional Product Manager who is friendly, supportive, and efficient. Your job is to guide the user through a short discovery, teach key concepts in simple language, and generate a clear PRD.
+<!-- ─── PRD EDITOR MODAL ─── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Edit PRD with AI</div>
+        <div class="modal-subtitle">Chat with the model to refine your document. Changes apply to the live PRD.</div>
+      </div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-tab-bar">
+      <button class="modal-tab active" data-modal-tab="chat">💬 Chat</button>
+      <button class="modal-tab" data-modal-tab="document">📄 Document</button>
+    </div>
+    <div class="modal-chat" id="modalChat"></div>
+    <pre class="modal-doc-view" id="modalDocView" style="display:none;"></pre>
+    <div class="modal-footer">
+      <input type="text" class="modal-input" id="modalInput" placeholder="Ask to change something, e.g. 'Add a section about mobile requirements'…"/>
+      <button class="btn btn-primary" id="modalSend" style="padding:10px 18px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Send
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST ─── -->
+<div class="toast" id="toast">
+  <span id="toastIcon">✓</span>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let conversationHistory = [];
+let generatedPRD = null;
+let uploadedFileContent = null;
+let generatedPrototypeHTML = null;
+let modalHistory = [];
+let currentDiscoveryStep = -1;
+let isThinking = false;
+
+// ═══════════════════════════════════════════════════════
+// DOM
+// ═══════════════════════════════════════════════════════
+const apiKeyInput   = document.getElementById('apiKey');
+const modelSelect   = document.getElementById('modelSelect');
+const tempSelect    = document.getElementById('tempSelect');
+const chatMessages  = document.getElementById('chatMessages');
+const chatInput     = document.getElementById('chatInput');
+const sendBtn       = document.getElementById('sendBtn');
+const startChatBtn  = document.getElementById('startChatBtn');
+const downloadPrdBtn= document.getElementById('downloadPrdBtn');
+const editPrdBtn    = document.getElementById('editPrdBtn');
+const resetBtn      = document.getElementById('resetBtn');
+const statusDot     = document.getElementById('statusDot');
+const fileInput     = document.getElementById('fileInput');
+const uploadZone    = document.getElementById('uploadZone');
+const prdContent    = document.getElementById('prdContent');
+const prdPlaceholder= document.getElementById('prdPlaceholder');
+const generateBtn   = document.getElementById('generateBtn');
+const exportHtmlBtn = document.getElementById('exportHtmlBtn');
+const protoPlaceholder = document.getElementById('protoPlaceholder');
+const prototypeContent = document.getElementById('prototypeContent');
+const generatingOverlay= document.getElementById('generatingOverlay');
+const genLabel      = document.getElementById('genLabel');
+const useChatPrdBtn = document.getElementById('useChatPrdBtn');
+
+const modalOverlay  = document.getElementById('modalOverlay');
+const modalClose    = document.getElementById('modalClose');
+const modalChat     = document.getElementById('modalChat');
+const modalDocView  = document.getElementById('modalDocView');
+const modalInput    = document.getElementById('modalInput');
+const modalSend     = document.getElementById('modalSend');
+
+const welcomeState  = document.getElementById('welcomeState');
+const workingNotes  = document.getElementById('workingNotes');
+const toast         = document.getElementById('toast');
+const toastMsg      = document.getElementById('toastMsg');
+const toastIcon     = document.getElementById('toastIcon');
+
+// ═══════════════════════════════════════════════════════
+// SYSTEM PROMPT
+// ═══════════════════════════════════════════════════════
+const SYSTEM_PROMPT = `You are an expert Senior Product Manager — sharp, efficient, and excellent at teaching non-technical founders. You guide users through a structured product discovery to create a professional, investor-grade PRD.
 
 OPERATING PRINCIPLES
+- Relevance first. Only ask what is needed to produce a strong PRD.
+- Two-phase flow: (1) Core Discovery — up to 7 high-value questions; (2) Targeted Deep Dive — only the follow-ups needed to fill specific gaps.
+- Teach briefly before each question (1 sentence max). This educates the user while they answer.
+- After every 2–3 answers, reflect a crisp summary in 1–2 lines and confirm.
+- Assume sensibly. When the user is unsure, propose a practical default and mark it as [ASSUMPTION].
+- Maintain working notes: Known Decisions, Open Questions, Assumptions.
+- No code. Focus on outcomes, user needs, risks, and measurement.
+- Tone: Plain, warm, and supportive. Use light markdown (bold, bullets, headers).
 
-* Relevance first. Ask only what you need to produce a strong PRD. Default to the shortest path.
-* Two phase flow:
+CORE DISCOVERY QUESTIONS (ask one at a time):
+1. **Problem & Value**: In 1–2 lines, what problem are we solving, for whom? What changes for the user when we succeed?
+2. **Primary User & JTBD**: Who is the main user? What job are they hiring this product to do?
+3. **Outcomes & KPIs**: What does success look like in numbers in the first 8–12 weeks? (Pick up to 3 KPIs)
+4. **Scope v1**: What must v1 do end-to-end for a single happy path?
+5. **Constraints**: Any hard limits — budget, timeline, compliance, platform?
+6. **Existing Assets**: Any data, APIs, brand assets, content, or existing prototypes to leverage?
+7. **Risks**: What are the top 2 ways this could fail?
 
-  1. Core Discovery: ask up to 7 high value questions.
-  2. Targeted Deep Dive: ask only the follow ups required to fill gaps for the PRD sections that are still unclear.
-* Teach briefly as you go. Before each question, give a one sentence explanation so the user learns while answering.
-* Summarize and confirm. After every 2 to 3 answers, reflect back a crisp summary and confirm in one sentence.
-* Assume sensibly. If the user is unsure, propose a practical default and mark it as an assumption. Keep an Assumptions list.
-* No code. Focus on concepts, outcomes, risks, and measurement.
-* Tone: plain, clear, and supportive.
+TARGETED DEEP DIVE (only if needed for missing PRD sections):
+- Platform & Channels: Web, mobile, desktop, API?
+- AI Specifics: Model choice, latency expectations, hallucination tolerance, evaluation needs, guardrails.
+- Data: Sources, freshness, privacy, PII handling, storage, retention.
+- UX: Key flows for the happy path, required screens, approvals.
+- GTM: Target audience, positioning, launch slice, phased rollout.
 
-CORE DISCOVERY QUESTIONS
-Ask these one by one, adapting wording to the user's context. Stop early if you already have enough to draft a PRD.
+ADDITIONAL DISCOVERY QUESTIONS (use as needed):
+- Monetization: How does the product make money, or how does it support revenue?
+- Competitive landscape: Are there existing solutions? What's the key differentiator?
+- Team & Timeline: Who is building this? What's the expected delivery timeline?
+- Integrations: What third-party tools or APIs must this integrate with?
+- Accessibility & Inclusivity: Any specific needs around accessibility or language localization?
+- Analytics & Data: What user events or metrics must be tracked?
 
-1. Problem and value: In one or two lines, what problem are we solving and for whom? What changes for them when we succeed?
-2. Primary user and JTBD: Who is the main user and what job are they trying to get done?
-3. Outcomes and KPIs: What does success look like in numbers in the first 8 to 12 weeks? Pick up to 3 KPIs.
-4. Scope v1: What must v1 do end to end for a single happy path?
-5. Constraints: Any hard limits such as budget, timeline, compliance, or platform?
-6. Existing assets: Do you already have data, content, APIs, brand voice, or a prototype we should leverage?
-7. Risks: What are the top 2 ways this could fail?
+WORKING NOTES: During each reply after the first exchange, include a brief section at the very end formatted exactly as:
+---NOTES---
+DECISIONS: [bullet list of confirmed decisions, or "none yet"]
+OPEN: [bullet list of open questions, or "none"]
+ASSUMPTIONS: [bullet list of assumptions made, or "none"]
+---END---
 
-TARGETED DEEP DIVE LOGIC
-Only ask if needed to complete the PRD.
+PRD GENERATION: When you have enough context, say: "I have enough to draft your PRD. Generating now…" then immediately output the full PRD using this EXACT format:
 
-* Platform and channels: Web, mobile, desktop, or API only. Any ecosystem constraints such as iOS guidelines or enterprise SSO.
-* AI specifics: model choice, latency expectations, hallucination tolerance, evaluation needs, guardrails.
-* Data: sources, freshness, privacy, PII handling, storage, and retention.
-* UX: key flows to support the happy path and required approvals.
-* GTM: audience, positioning, launch slice, and rollout.
-
-MICRO EDUCATION SNIPPETS
-Use one line before each related question:
-
-* KPI vs success criteria: KPIs are numeric outcome targets. Success criteria can include qualitative launch goals.
-* Model vs prompt: Model is the engine. Prompt is the instruction that steers it.
-* RAG vs fine tuning: RAG pulls facts at runtime. Fine tuning teaches stable patterns from examples.
-* Human in the loop: Add review steps where risk or brand matters.
-
-WORKING NOTES DURING DISCOVERY
-Maintain three short lists while chatting and show them in each recap:
-
-* Known Decisions
-* Open Questions
-* Assumptions
-
-PRD GENERATION RULES
-When you have enough to draft, say:
-"I will now generate prd.md based on what we agreed. Anything marked Assumption can be revised."
-Then create prd.md using the exact structure below. Fill all sections. If unknown, write "TBD" or add an Assumption. Use concise bullets, tables where helpful, and plain language.
-
-PRD OUTPUT FORMAT (prd.md)
-
-# CONTENTS
-
-Abstract
-Business Objectives
-KPI
-Success Criteria
-User Journeys
-Scenarios
-User Flow
-Model Requirements
-Data Requirements
-Prompt Requirements
-Testing & Measurement
-Risks & Mitigations
-Costs
-Assumptions & Dependencies
-Compliance/Privacy/Legal
-GTM/Rollout Plan
+---PRD---
+# PRD: [Product Name]
 
 ## 📝 Abstract
-
-Brief description of product, purpose, and rationale.
+[Brief product description, purpose, and rationale.]
 
 ## 🎯 Business Objectives
+[Bulleted list linking product impact to business goals.]
 
-Bullets that link product impact to business goals.
-
-## 📊 KPI
-
-| GOAL                           | METRIC        | QUESTION                                       |
-| ------------------------------ | ------------- | ---------------------------------------------- |
-| New User Growth                | # New Signups | How many signups are driven by this launch     |
-| New User Retention             | D7 Retention  | Does this feature increase week one stickiness |
-| (Add or remove rows as needed) |               |                                                |
+## 📊 KPIs
+| Goal | Metric | Question |
+|------|--------|----------|
+| ... | ... | ... |
 
 ## 🏆 Success Criteria
+[Clear definition of success: press, signups, churn, conversion.]
 
-Clear definition of success for this project such as press, churn, signups, conversion impact.
-
-## 🚶‍♀️ User Journeys
-
-Short narrative of key journeys for the target user.
+## 🚶 User Journeys
+[Short narrative of 2–3 key journeys for the target user.]
 
 ## 📖 Scenarios
-
-List primary scenarios. Example lines are fine if tailored to this product.
+[List 3–5 primary scenarios with brief descriptions.]
 
 ## 🕹️ User Flow
-
-High level flow for happy path and key alternatives. Use bullets if no diagram.
+[High-level happy path and key alternatives. Use bullet steps.]
 
 ## 🧰 Functional Requirements
+| Section | Sub-Section | User Story & Expected Behaviors | Screens |
+|---------|-------------|--------------------------------|---------|
+| ... | ... | ... | TBD |
 
-Describe features and expected behaviors with user stories and acceptance hints. Add screens if available.
-Use a brief table for major auth and core flows:
-
-| SECTION         | SUB-SECTION | USER STORY & EXPECTED BEHAVIORS | SCREENS      |
-| --------------- | ----------- | ------------------------------- | ------------ |
-| Signup          | Email       | Story and behaviors             | Links or TBD |
-| Signup          | Google      | Story and behaviors             | Links or TBD |
-| Login           | Email       | Story and behaviors             | Links or TBD |
-| Login           | Google      | Story and behaviors             | Links or TBD |
-| Forgot Password |             | Story and behaviors             | Links or TBD |
-
-## 📐 Model Requirements
-
-| SPECIFICATION          | REQUIREMENT        | RATIONALE |
-| ---------------------- | ------------------ | --------- |
-| Open vs Proprietary    | Option             | Why       |
-| Context Window         | Value              | Why       |
-| Modalities             | Text, Vision, etc. | Why       |
-| Fine Tuning Capability | Needed or not      | Why       |
-| Latency                | Target P50 and P95 | Why       |
-| Parameters             | If relevant        | Why       |
+## 📐 Model Requirements (if AI product)
+| Specification | Requirement | Rationale |
+|---------------|-------------|-----------|
+| Open vs Proprietary | ... | ... |
+| Context Window | ... | ... |
+| Modalities | ... | ... |
+| Latency | P50: x / P95: y | ... |
 
 ## 🧮 Data Requirements
+- Fine-tuning purpose: ...
+- Data preparation plan: ...
+- Quantity and coverage targets: ...
+- Ongoing collection plan: ...
 
-* Fine tuning purpose
-* Data preparation plan
-* Quantity and coverage targets
-* Ongoing collection plan
-* Iterative fine tuning plan
-
-## 💬 Prompt Requirements
-
-* Policy and refusal handling
-* Personalization rules such as pronouns and tone
-* Output format guarantees such as JSON schema
-* Accuracy target tied to the Testing Plan
+## 💬 Prompt Requirements (if AI product)
+- Policy and refusal handling: ...
+- Personalization rules: ...
+- Output format guarantees: ...
+- Accuracy target: ...
 
 ## 🧪 Testing & Measurement
-
-* Offline eval plan such as golden sets, rubric, and pass thresholds
-* Online plan such as A/B design, guardrails, and rollback
-* Live performance tracking and alerting
+- Offline eval plan: ...
+- Online plan (A/B): ...
+- Live tracking and alerting: ...
 
 ## ⚠️ Risks & Mitigations
+| Risk | Mitigation |
+|------|------------|
+| ... | ... |
 
-| RISK                                 | MITIGATION                                           |
-| ------------------------------------ | ---------------------------------------------------- |
-| Invalid JSON breaks downstream calls | Auto retry with repair and show graceful error state |
-| Wrong pronouns or tone               | Store preferences and pass into prompts              |
-| Harmful or restricted content        | Policy reminders and refusal flows                   |
-
-## 💰 Costs
-
-* Development costs such as data, tuning, and QA
-* Operational costs such as tokens, inference, or GPUs
+## 💰 Cost Estimates
+- Development costs: ...
+- Operational costs (tokens, infra): ...
 
 ## 🔗 Assumptions & Dependencies
-
-Bulleted list of assumptions and external dependencies.
-
-## 🔒 Compliance/Privacy/Legal
-
-* Regulatory notes
-* Data governance, retention, and access controls
-
-## 📣 GTM/Rollout Plan
-
-* Milestones
-* Launch strategy
-* Phased rollout including beta and full launch
-
-CLOSING
-After sharing prd.md, ask for feedback with one question per theme: scope, risks, and KPIs. Offer to revise and mark changes in the Assumptions list.
-
-CONVERSATION START
-Introduce yourself briefly, then ask the user to describe their app idea in one or two lines to begin Core Discovery.`;
-
-        // Start chat
-        startChatBtn.addEventListener('click', async () => {
-            const apiKey = apiKeyInput.value.trim();
-            if (!apiKey) {
-                alert('Please enter your Gemini API key first');
-                return;
-            }
-
-            startChatBtn.disabled = true;
-            chatInput.disabled = false;
-            sendBtn.disabled = false;
-
-            // Initialize conversation
-            conversationHistory = [];
-            chatMessages.innerHTML = '';
-
-            // Get initial message from AI
-            await sendSystemMessage(apiKey, true);
-        });
-
-        // Send message
-        sendBtn.addEventListener('click', () => sendMessage());
-        chatInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        async function sendMessage() {
-            const message = chatInput.value.trim();
-            if (!message) return;
-
-            const apiKey = apiKeyInput.value.trim();
-            if (!apiKey) {
-                alert('Please enter your Gemini API key');
-                return;
-            }
-
-            // Add user message
-            addMessage('user', message);
-            conversationHistory.push({ role: 'user', parts: [{ text: message }] });
-
-            chatInput.value = '';
-            chatInput.disabled = true;
-            sendBtn.disabled = true;
-
-            // Get AI response
-            await sendSystemMessage(apiKey, false);
-
-            chatInput.disabled = false;
-            sendBtn.disabled = false;
-            chatInput.focus();
-        }
-
-        async function sendSystemMessage(apiKey, isFirst) {
-            try {
-                showLoading();
-
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-                let contents;
-                if (isFirst) {
-                    contents = [
-                        { role: 'user', parts: [{ text: SYSTEM_PROMPT }] },
-                        { role: 'model', parts: [{ text: 'Understood. I will follow these instructions precisely.' }] },
-                        { role: 'user', parts: [{ text: 'Please start the conversation.' }] }
-                    ];
-                } else {
-                    contents = conversationHistory;
-                }
-
-                const requestBody = {
-                    contents: contents,
-                    generationConfig: {
-                        temperature: 0.7,
-                        topK: 40,
-                        topP: 0.95,
-                        maxOutputTokens: 8192,
-                    }
-                };
-
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (!data.candidates || data.candidates.length === 0) {
-                    throw new Error('No response generated from API');
-                }
-
-                const assistantMessage = data.candidates[0].content.parts[0].text;
-
-                // Remove loading indicator
-                const loadingMsg = chatMessages.querySelector('.message.loading');
-                if (loadingMsg) loadingMsg.remove();
-
-                // Add assistant message
-                addMessage('assistant', assistantMessage);
-                conversationHistory.push({ role: 'model', parts: [{ text: assistantMessage }] });
-
-                // Check if PRD was generated
-                if (assistantMessage.includes('# CONTENTS') || assistantMessage.includes('## 📝 Abstract')) {
-                    generatedPRD = assistantMessage;
-                    downloadPrdBtn.disabled = false;
-                }
-
-            } catch (error) {
-                const loadingMsg = chatMessages.querySelector('.message.loading');
-                if (loadingMsg) loadingMsg.remove();
-                addMessage('assistant', `Error: ${error.message}`);
-            }
-        }
-
-        function addMessage(role, content) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${role}`;
-
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'message-content';
-            contentDiv.textContent = content;
-
-            messageDiv.appendChild(contentDiv);
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function showLoading() {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'message assistant loading';
-            messageDiv.innerHTML = '<div class="spinner"></div>';
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        // Download PRD
-        downloadPrdBtn.addEventListener('click', () => {
-            if (!generatedPRD) return;
-
-            const blob = new Blob([generatedPRD], { type: 'text/markdown' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'prd.md';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        });
-
-        // Prototype generation (existing functionality)
-        fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                fileName.textContent = file.name;
-                try {
-                    const content = await readFile(file);
-                    uploadedFileContent = content;
-                    prdContent.textContent = content;
-                    updateGenerateButton();
-                } catch (error) {
-                    showError(prdContent, 'Error reading file: ' + error.message);
-                }
-            } else {
-                fileName.textContent = 'No file chosen';
-                uploadedFileContent = null;
-                prdContent.textContent = 'Upload a PRD file to see its content here...';
-                updateGenerateButton();
-            }
-        });
-
-        apiKeyInput.addEventListener('input', updateGenerateButton);
-
-        function readFile(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => resolve(e.target.result);
-                reader.onerror = (e) => reject(new Error('Failed to read file'));
-                reader.readAsText(file);
-            });
-        }
-
-        function updateGenerateButton() {
-            const apiKey = apiKeyInput.value.trim();
-            const hasFile = uploadedFileContent !== null;
-            generateBtn.disabled = !apiKey || !hasFile;
-        }
-
-        generateBtn.addEventListener('click', async () => {
-            const apiKey = apiKeyInput.value.trim();
-
-            if (!apiKey) {
-                showError(prototypeContent, 'Please enter your Gemini API key');
-                return;
-            }
-
-            if (!uploadedFileContent) {
-                showError(prototypeContent, 'Please upload a PRD file first');
-                return;
-            }
-
-            generateBtn.disabled = true;
-            prototypeContent.innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <p>Generating prototype from PRD...</p>
-                </div>
-            `;
-
-            try {
-                const html = await callGeminiAPI(apiKey, uploadedFileContent);
-                renderPrototype(html);
-            } catch (error) {
-                showError(prototypeContent, 'Error generating prototype: ' + error.message);
-            } finally {
-                generateBtn.disabled = false;
-                updateGenerateButton();
-            }
-        });
-
-        async function callGeminiAPI(apiKey, prdContent) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-            const prompt = `You are a web prototype generator. Read the following PRD (Product Requirements Document) and generate a complete, functional HTML prototype with inline CSS and JavaScript.
-
-IMPORTANT INSTRUCTIONS:
-- Return ONLY the HTML code, starting with <!DOCTYPE html>
-- Do NOT wrap the code in markdown code blocks or backticks
-- Do NOT include any explanatory text before or after the HTML
-- Include all CSS inline in a <style> tag in the <head>
-- Include all JavaScript inline in a <script> tag before the closing </body> tag
-- Make the prototype fully functional and interactive
-- Use modern, clean design principles
-- Make it responsive and mobile-friendly
-
-PRD Content:
-${prdContent}
-
-Generate the complete HTML prototype now (HTML only, no markdown formatting):`;
-
-            const requestBody = {
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    topK: 40,
-                    topP: 0.95,
-                    maxOutputTokens: 8192,
-                }
-            };
-
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestBody)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error?.message || `API request failed with status ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (!data.candidates || data.candidates.length === 0) {
-                throw new Error('No response generated from API');
-            }
-
-            let htmlContent = data.candidates[0].content.parts[0].text;
-
-            htmlContent = htmlContent.replace(/```html\n?/g, '');
-            htmlContent = htmlContent.replace(/```\n?/g, '');
-            htmlContent = htmlContent.trim();
-
-            return htmlContent;
-        }
-
-        function renderPrototype(html) {
-            prototypeContent.innerHTML = '';
-
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-
-            const scripts = tempDiv.querySelectorAll('script');
-            const scriptContents = [];
-
-            scripts.forEach(script => {
-                if (script.src) {
-                    scriptContents.push({ type: 'external', src: script.src });
-                } else {
-                    scriptContents.push({ type: 'inline', content: script.textContent });
-                }
-                script.remove();
-            });
-
-            prototypeContent.innerHTML = tempDiv.innerHTML;
-
-            scriptContents.forEach(script => {
-                if (script.type === 'external') {
-                    const scriptElement = document.createElement('script');
-                    scriptElement.src = script.src;
-                    prototypeContent.appendChild(scriptElement);
-                } else {
-                    try {
-                        const scriptElement = document.createElement('script');
-                        scriptElement.textContent = script.content;
-                        prototypeContent.appendChild(scriptElement);
-                    } catch (error) {
-                        console.error('Error executing script:', error);
-                    }
-                }
-            });
-        }
-
-        function showError(element, message) {
-            element.innerHTML = `<div class="error">${message}</div>`;
-        }
-    </script>
+[Bulleted list]
+
+## 🔒 Compliance / Privacy / Legal
+[Regulatory notes, data governance, retention, access controls]
+
+## 📣 GTM / Rollout Plan
+- Milestones: ...
+- Launch strategy: ...
+- Phased rollout (beta → full): ...
+---END-PRD---
+
+After generating, ask one follow-up question each about scope, risks, and KPIs, and offer to revise. Clearly mark any changes in the Assumptions list.
+
+CONVERSATION START: Introduce yourself in 2 lines, then ask: "Tell me about your app idea in 1–2 lines to get started."`;
+
+// ═══════════════════════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════════════════════
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab).classList.add('active');
+  });
+});
+
+document.querySelectorAll('.modal-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    if (tab.dataset.modalTab === 'chat') {
+      modalChat.style.display = 'flex';
+      modalDocView.style.display = 'none';
+    } else {
+      modalChat.style.display = 'none';
+      modalDocView.style.display = 'block';
+      renderModalDoc();
+    }
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════
+function getApiKey() { return apiKeyInput.value.trim(); }
+function getModel()  { return modelSelect.value; }
+function getTemp()   { return parseFloat(tempSelect.value); }
+
+function showToast(msg, type='success') {
+  toastMsg.textContent = msg;
+  toastIcon.textContent = type === 'success' ? '✓' : '✕';
+  toast.className = `toast show ${type}`;
+  setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+function setStatus(active) {
+  statusDot.className = 'status-dot' + (active ? ' active' : '');
+}
+
+// ═══════════════════════════════════════════════════════
+// MARKDOWN RENDERER (simple)
+// ═══════════════════════════════════════════════════════
+function renderMarkdown(text) {
+  let html = text
+    // Tables
+    .replace(/\|(.+)\|/g, (match) => {
+      const cells = match.split('|').filter(c => c.trim());
+      const isHeader = cells.every(c => /^[-: ]+$/.test(c.trim()));
+      if (isHeader) return '';
+      const tag = cells[0] && cells[0].includes('---') ? 'th' : 'td';
+      return '<tr>' + cells.map(c => `<${tag}>${c.trim()}</${tag}>`).join('') + '</tr>';
+    })
+    .replace(/(<tr>.*<\/tr>\n?)+/g, (match) => `<table>${match}</table>`)
+    // Headers
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    // Bold
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    // Italic
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    // Code inline
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    // Blockquote
+    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+    // HR
+    .replace(/^---$/gm, '<hr/>')
+    // Bullet lists
+    .replace(/^[-*] (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, (match) => `<ul>${match}</ul>`)
+    // Numbered lists
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    // Line breaks
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br/>');
+
+  return `<p>${html}</p>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// CHAT MESSAGES
+// ═══════════════════════════════════════════════════════
+function addMessage(role, text, container) {
+  const el = container || chatMessages;
+
+  // Remove welcome state
+  const ws = el.querySelector('#welcomeState') || document.getElementById('welcomeState');
+  if (ws) ws.style.display = 'none';
+
+  const wrapper = document.createElement('div');
+  wrapper.className = `message ${role}`;
+
+  const roleLabel = document.createElement('div');
+  roleLabel.className = 'msg-role';
+  roleLabel.textContent = role === 'user' ? 'You' : 'PM Assistant';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+
+  if (role === 'assistant') {
+    // Strip working notes before rendering
+    const clean = text.replace(/---NOTES---[\s\S]*?---END---/g, '').trim();
+    // Strip PRD markers for display
+    const display = clean.replace(/^---PRD---\s*/m, '').replace(/\s*---END-PRD---$/m, '');
+    bubble.innerHTML = renderMarkdown(display);
+    // Parse working notes
+    parseAndRenderNotes(text);
+    // Check if PRD was generated
+    if (text.includes('---PRD---')) {
+      const prdMatch = text.match(/---PRD---([\s\S]*?)---END-PRD---/);
+      if (prdMatch) {
+        generatedPRD = prdMatch[1].trim();
+        downloadPrdBtn.disabled = false;
+        editPrdBtn.disabled = false;
+        markStep(7);
+        showToast('PRD generated! You can download or edit it.', 'success');
+      }
+    }
+    // Track discovery steps
+    trackDiscoveryStep(text);
+  } else {
+    bubble.textContent = text;
+  }
+
+  wrapper.appendChild(roleLabel);
+  wrapper.appendChild(bubble);
+  el.appendChild(wrapper);
+  el.scrollTop = el.scrollHeight;
+  return wrapper;
+}
+
+function addTypingIndicator(container) {
+  const el = container || chatMessages;
+  const wrapper = document.createElement('div');
+  wrapper.className = 'message assistant typing-indicator';
+  wrapper.id = 'typingIndicator';
+  wrapper.innerHTML = `<div class="msg-role">PM Assistant</div><div class="msg-bubble"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  el.appendChild(wrapper);
+  el.scrollTop = el.scrollHeight;
+}
+
+function removeTypingIndicator(container) {
+  const el = container || chatMessages;
+  const t = el.querySelector('#typingIndicator') || document.getElementById('typingIndicator');
+  if (t) t.remove();
+}
+
+// ═══════════════════════════════════════════════════════
+// WORKING NOTES PARSER
+// ═══════════════════════════════════════════════════════
+function parseAndRenderNotes(text) {
+  const match = text.match(/---NOTES---([\s\S]*?)---END---/);
+  if (!match) return;
+  const lines = match[1].trim().split('\n');
+  const sections = { DECISIONS: [], OPEN: [], ASSUMPTIONS: [] };
+  let current = null;
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('DECISIONS:')) { current = 'DECISIONS'; const rest = trimmed.replace('DECISIONS:', '').trim(); if (rest && rest !== 'none yet') sections.DECISIONS.push(rest); }
+    else if (trimmed.startsWith('OPEN:')) { current = 'OPEN'; const rest = trimmed.replace('OPEN:', '').trim(); if (rest && rest !== 'none') sections.OPEN.push(rest); }
+    else if (trimmed.startsWith('ASSUMPTIONS:')) { current = 'ASSUMPTIONS'; const rest = trimmed.replace('ASSUMPTIONS:', '').trim(); if (rest && rest !== 'none') sections.ASSUMPTIONS.push(rest); }
+    else if (trimmed.startsWith('-') && current) { const item = trimmed.replace(/^-\s*/, ''); if (item) sections[current].push(item); }
+  }
+
+  let html = '';
+  const labels = { DECISIONS: '✅ Decisions', OPEN: '❓ Open', ASSUMPTIONS: '💡 Assumptions' };
+  for (const [key, items] of Object.entries(sections)) {
+    html += `<div class="note-section"><div class="note-label">${labels[key]}</div>`;
+    if (items.length === 0) { html += `<div class="note-item empty">None yet</div>`; }
+    else { items.forEach(i => { html += `<div class="note-item">• ${i}</div>`; }); }
+    html += `</div>`;
+  }
+  workingNotes.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════════
+// PROGRESS TRACKER
+// ═══════════════════════════════════════════════════════
+const STEP_KEYWORDS = [
+  ['problem', 'value', 'solving', 'for whom'],
+  ['user', 'jtbd', 'job to be done', 'primary user'],
+  ['kpi', 'success', 'outcomes', 'metric'],
+  ['scope', 'v1', 'happy path', 'feature'],
+  ['constraint', 'budget', 'timeline', 'compliance'],
+  ['asset', 'existing', 'api', 'brand'],
+  ['risk', 'fail', 'mitigation'],
+];
+
+function trackDiscoveryStep(text) {
+  const lower = text.toLowerCase();
+  STEP_KEYWORDS.forEach((keywords, i) => {
+    if (keywords.some(k => lower.includes(k))) markStep(i);
+  });
+}
+
+function markStep(index) {
+  const items = document.querySelectorAll('#progressTracker .progress-item');
+  if (items[index]) {
+    items[index].classList.add('done');
+    items[index].querySelector('.progress-check').classList.add('done');
+    items[index].querySelector('.progress-check').textContent = '✓';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// GEMINI API CALL
+// ═══════════════════════════════════════════════════════
+async function callGemini(messages, onTyping) {
+  const apiKey = getApiKey();
+  const model = getModel();
+  const temp = getTemp();
+
+  if (!apiKey) throw new Error('Please enter your Gemini API key');
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+  const body = {
+    contents: messages,
+    generationConfig: {
+      temperature: temp,
+      topK: 40,
+      topP: 0.95,
+      maxOutputTokens: 16384,
+    }
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    const msg = err?.error?.message || `API error ${response.status}`;
+    throw new Error(msg);
+  }
+
+  const data = await response.json();
+  if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+    throw new Error('Empty response from API. Check your key and quota.');
+  }
+
+  return data.candidates[0].content.parts[0].text;
+}
+
+// ═══════════════════════════════════════════════════════
+// START SESSION
+// ═══════════════════════════════════════════════════════
+startChatBtn.addEventListener('click', async () => {
+  if (!getApiKey()) { showToast('Enter your Gemini API key first', 'error'); return; }
+
+  startChatBtn.disabled = true;
+  chatInput.disabled = false;
+  sendBtn.disabled = false;
+  setStatus(true);
+
+  conversationHistory = [];
+  chatMessages.innerHTML = '';
+  document.getElementById('welcomeState')?.remove();
+
+  addTypingIndicator();
+  isThinking = true;
+
+  try {
+    const initMessages = [
+      { role: 'user', parts: [{ text: SYSTEM_PROMPT }] },
+      { role: 'model', parts: [{ text: 'Understood. I will follow these instructions precisely.' }] },
+      { role: 'user', parts: [{ text: 'Please start the PRD discovery conversation now.' }] }
+    ];
+
+    const reply = await callGemini(initMessages);
+    removeTypingIndicator();
+    addMessage('assistant', reply);
+    conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
+    chatInput.focus();
+  } catch (e) {
+    removeTypingIndicator();
+    addMessage('assistant', `⚠️ ${e.message}`);
+    startChatBtn.disabled = false;
+    setStatus(false);
+  } finally {
+    isThinking = false;
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+// SEND MESSAGE
+// ═══════════════════════════════════════════════════════
+async function sendMessage() {
+  const msg = chatInput.value.trim();
+  if (!msg || isThinking) return;
+
+  addMessage('user', msg);
+  conversationHistory.push({ role: 'user', parts: [{ text: msg }] });
+  chatInput.value = '';
+  chatInput.style.height = 'auto';
+
+  chatInput.disabled = true;
+  sendBtn.disabled = true;
+  isThinking = true;
+  addTypingIndicator();
+  setStatus(true);
+
+  try {
+    // Build conversation with system prompt at start
+    const messages = [
+      { role: 'user', parts: [{ text: SYSTEM_PROMPT }] },
+      { role: 'model', parts: [{ text: 'Understood. I will follow these instructions precisely.' }] },
+      ...conversationHistory
+    ];
+
+    const reply = await callGemini(messages);
+    removeTypingIndicator();
+    addMessage('assistant', reply);
+    conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
+  } catch (e) {
+    removeTypingIndicator();
+    addMessage('assistant', `⚠️ ${e.message}`);
+  } finally {
+    chatInput.disabled = false;
+    sendBtn.disabled = false;
+    isThinking = false;
+    chatInput.focus();
+    setStatus(false);
+  }
+}
+
+sendBtn.addEventListener('click', sendMessage);
+chatInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+// Auto-resize textarea
+chatInput.addEventListener('input', () => {
+  chatInput.style.height = 'auto';
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+});
+
+// ═══════════════════════════════════════════════════════
+// DOWNLOAD PRD
+// ═══════════════════════════════════════════════════════
+downloadPrdBtn.addEventListener('click', () => {
+  if (!generatedPRD) return;
+  const blob = new Blob([generatedPRD], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'prd.md';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('PRD downloaded as prd.md');
+});
+
+// ═══════════════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════════════
+resetBtn.addEventListener('click', () => {
+  conversationHistory = [];
+  generatedPRD = null;
+  chatMessages.innerHTML = '';
+  chatInput.disabled = true;
+  sendBtn.disabled = true;
+  startChatBtn.disabled = false;
+  downloadPrdBtn.disabled = true;
+  editPrdBtn.disabled = true;
+  workingNotes.innerHTML = '<div style="color:var(--text3);font-size:0.75rem;font-style:italic;">Notes will appear as the conversation progresses…</div>';
+  document.querySelectorAll('#progressTracker .progress-item').forEach(i => {
+    i.classList.remove('done');
+    const check = i.querySelector('.progress-check');
+    check.classList.remove('done');
+    check.textContent = check.textContent === '✓' ? i.closest('.progress-item').querySelector('.progress-check').textContent : check.textContent;
+  });
+  // Restore step numbers
+  document.querySelectorAll('#progressTracker .progress-item').forEach((item, idx) => {
+    const check = item.querySelector('.progress-check');
+    check.textContent = idx < 7 ? idx + 1 : '✓';
+  });
+  setStatus(false);
+
+  // Add welcome state back
+  const ws = document.createElement('div');
+  ws.id = 'welcomeState';
+  ws.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;text-align:center;padding:40px;';
+  ws.innerHTML = `<div style="font-family:var(--font-serif);font-size:1.5rem;color:var(--text);">Start your PRD session</div><div style="font-size:0.85rem;color:var(--text3);max-width:340px;line-height:1.6;">Enter your Gemini API key, select a model, then click <strong style="color:var(--text2);">Start Session</strong> to begin guided product discovery.</div>`;
+  chatMessages.appendChild(ws);
+
+  showToast('Session reset');
+});
+
+// ═══════════════════════════════════════════════════════
+// MODAL — EDIT PRD
+// ═══════════════════════════════════════════════════════
+editPrdBtn.addEventListener('click', () => {
+  if (!generatedPRD) return;
+  modalHistory = [];
+  modalChat.innerHTML = '';
+
+  // Welcome message in modal
+  const intro = document.createElement('div');
+  intro.style.cssText = 'text-align:center;padding:20px;color:var(--text3);font-size:0.82rem;';
+  intro.innerHTML = `<div style="font-size:1.5rem;margin-bottom:8px;">✏️</div>Chat to refine your PRD. Ask the AI to add sections, change wording, update KPIs, etc.`;
+  modalChat.appendChild(intro);
+
+  renderModalDoc();
+  modalOverlay.classList.add('open');
+  modalInput.focus();
+});
+
+modalClose.addEventListener('click', () => {
+  modalOverlay.classList.remove('open');
+});
+modalOverlay.addEventListener('click', (e) => {
+  if (e.target === modalOverlay) modalOverlay.classList.remove('open');
+});
+
+function renderModalDoc() {
+  if (!generatedPRD) return;
+  // Render with basic styling
+  modalDocView.textContent = generatedPRD;
+}
+
+async function sendModalMessage() {
+  const msg = modalInput.value.trim();
+  if (!msg || !generatedPRD) return;
+
+  // Add user message in modal
+  addMessage('user', msg, modalChat);
+  modalHistory.push({ role: 'user', parts: [{ text: msg }] });
+  modalInput.value = '';
+
+  const editPrompt = `You are editing a PRD document. Here is the current PRD:
+
+---CURRENT PRD---
+${generatedPRD}
+---END CURRENT PRD---
+
+The user wants to make this change: "${msg}"
+
+Please output the COMPLETE updated PRD with the requested changes applied. Output ONLY the PRD content (starting with # PRD:), no preamble. Also provide a brief 1-line summary of what changed.
+
+Format:
+CHANGE_SUMMARY: [what changed]
+---PRD-UPDATED---
+[complete updated PRD]
+---END-PRD---`;
+
+  addTypingIndicator(modalChat);
+
+  try {
+    const messages = [{ role: 'user', parts: [{ text: editPrompt }] }, ...modalHistory];
+    const reply = await callGemini(messages);
+
+    removeTypingIndicator(modalChat);
+
+    // Extract updated PRD
+    const prdMatch = reply.match(/---PRD-UPDATED---([\s\S]*?)---END-PRD---/);
+    const changeMatch = reply.match(/CHANGE_SUMMARY: (.+)/);
+
+    if (prdMatch) {
+      generatedPRD = prdMatch[1].trim();
+      renderModalDoc();
+      const changeSummary = changeMatch ? changeMatch[1] : 'PRD updated';
+      addMessage('assistant', `✅ ${changeSummary}\n\nSwitch to the **Document** tab to see the full updated PRD.`, modalChat);
+      showToast('PRD updated', 'success');
+    } else {
+      addMessage('assistant', reply, modalChat);
+    }
+
+    modalHistory.push({ role: 'model', parts: [{ text: reply }] });
+  } catch (e) {
+    removeTypingIndicator(modalChat);
+    addMessage('assistant', `⚠️ ${e.message}`, modalChat);
+  }
+}
+
+modalSend.addEventListener('click', sendModalMessage);
+modalInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') { e.preventDefault(); sendModalMessage(); }
+});
+
+// ═══════════════════════════════════════════════════════
+// FILE UPLOAD (Prototype Tab)
+// ═══════════════════════════════════════════════════════
+fileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    const content = await readFileAsText(file);
+    setUploadedPRD(content, file.name);
+  } catch (err) {
+    showToast('Error reading file: ' + err.message, 'error');
+  }
+});
+
+uploadZone.addEventListener('dragover', (e) => {
+  e.preventDefault();
+  uploadZone.classList.add('drag-over');
+});
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', async (e) => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  try {
+    const content = await readFileAsText(file);
+    setUploadedPRD(content, file.name);
+  } catch (err) {
+    showToast('Error reading file', 'error');
+  }
+});
+
+useChatPrdBtn.addEventListener('click', () => {
+  if (!generatedPRD) {
+    showToast('No PRD from Step 1 yet. Complete the chat first.', 'error');
+    return;
+  }
+  setUploadedPRD(generatedPRD, 'from-chat-session.md');
+  showToast('PRD loaded from session');
+});
+
+function setUploadedPRD(content, name) {
+  uploadedFileContent = content;
+  prdContent.textContent = content;
+  prdContent.style.display = 'block';
+  prdPlaceholder.style.display = 'none';
+  uploadZone.style.borderColor = 'var(--accent)';
+  uploadZone.querySelector('p').innerHTML = `📄 <strong style="color:var(--accent)">${name}</strong> loaded`;
+  generateBtn.disabled = !getApiKey();
+  if (!getApiKey()) showToast('Enter Gemini API key to generate', 'error');
+}
+
+apiKeyInput.addEventListener('input', () => {
+  if (uploadedFileContent) generateBtn.disabled = !getApiKey();
+});
+
+function readFileAsText(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = e => resolve(e.target.result);
+    r.onerror = () => reject(new Error('Read failed'));
+    r.readAsText(file);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// GENERATE PROTOTYPE
+// ═══════════════════════════════════════════════════════
+const genSteps = [
+  'Reading PRD…',
+  'Analyzing user flows…',
+  'Designing component structure…',
+  'Writing HTML scaffold…',
+  'Styling with CSS…',
+  'Adding JavaScript interactions…',
+  'Finalizing prototype…',
+];
+let genStepIndex = 0;
+let genInterval = null;
+
+generateBtn.addEventListener('click', async () => {
+  if (!getApiKey()) { showToast('Enter API key first', 'error'); return; }
+  if (!uploadedFileContent) { showToast('Load a PRD first', 'error'); return; }
+
+  generateBtn.disabled = true;
+  exportHtmlBtn.disabled = true;
+  protoPlaceholder.style.display = 'none';
+  prototypeContent.style.display = 'none';
+  generatingOverlay.classList.add('show');
+
+  genStepIndex = 0;
+  genLabel.textContent = genSteps[0];
+  genInterval = setInterval(() => {
+    genStepIndex = (genStepIndex + 1) % genSteps.length;
+    genLabel.textContent = genSteps[genStepIndex];
+  }, 1800);
+
+  const protoPrompt = `You are an expert frontend developer. Based on the following PRD, generate a COMPLETE, FUNCTIONAL, BEAUTIFUL HTML prototype.
+
+REQUIREMENTS:
+- Single HTML file with embedded CSS and JavaScript
+- Modern, professional design with a dark theme (background: #0f0f0f, accent: #e8ff47)
+- Fully interactive (all buttons, forms, navigation must work)
+- Use Google Fonts (import in <head>)
+- Responsive layout
+- Realistic dummy data throughout
+- No external dependencies except Google Fonts
+- The prototype should be something a real stakeholder could review and understand
+- Include ALL key screens/states mentioned in the PRD
+- Add smooth animations and transitions
+- Show loading states, empty states, success states
+
+OUTPUT: Return ONLY raw HTML. No explanation. No markdown. No backticks. Just the HTML file starting with <!DOCTYPE html>.
+
+PRD:
+${uploadedFileContent}`;
+
+  try {
+    const messages = [{ role: 'user', parts: [{ text: protoPrompt }] }];
+    const reply = await callGemini(messages);
+    clearInterval(genInterval);
+    generatingOverlay.classList.remove('show');
+
+    // Extract HTML (strip any accidental markdown)
+    let html = reply
+      .replace(/^```html\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/\s*```\s*$/, '')
+      .trim();
+
+    if (!html.startsWith('<!')) {
+      const idx = html.indexOf('<!DOCTYPE');
+      if (idx !== -1) html = html.substring(idx);
+    }
+
+    generatedPrototypeHTML = html;
+
+    // Render in iframe
+    prototypeContent.innerHTML = '';
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'width:100%;height:100%;border:none;border-radius:8px;';
+    prototypeContent.appendChild(iframe);
+    iframe.contentDocument.open();
+    iframe.contentDocument.write(html);
+    iframe.contentDocument.close();
+
+    prototypeContent.style.display = 'block';
+    exportHtmlBtn.disabled = false;
+    generateBtn.disabled = false;
+    showToast('Prototype generated!', 'success');
+
+  } catch (e) {
+    clearInterval(genInterval);
+    generatingOverlay.classList.remove('show');
+    protoPlaceholder.style.display = 'flex';
+    protoPlaceholder.innerHTML = `<div class="big-icon">⚠️</div><div style="color:#ff6b6b;">${e.message}</div>`;
+    generateBtn.disabled = false;
+    showToast('Generation failed', 'error');
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+// EXPORT HTML
+// ═══════════════════════════════════════════════════════
+exportHtmlBtn.addEventListener('click', () => {
+  if (!generatedPrototypeHTML) return;
+  const blob = new Blob([generatedPrototypeHTML], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'prototype.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Prototype exported as prototype.html');
+});
+</script>
 </body>
 </html>
