@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <rect width="1400" height="900" fill="#0a0a0a"/>
+
+  <rect x="0" y="0" width="1400" height="90" fill="#0d0d0d" stroke="#2a2a2a"/>
+  <text x="40" y="56" fill="#f0f0f0" font-size="28" font-family="Arial, sans-serif">PRD -&gt; Prototype</text>
+  <rect x="312" y="34" width="42" height="22" rx="4" fill="#e8ff47"/>
+  <text x="323" y="50" fill="#000000" font-size="12" font-family="Arial, sans-serif">v2</text>
+  <text x="1030" y="56" fill="#777777" font-size="12" font-family="Arial, sans-serif">AI-Powered Product Discovery</text>
+
+  <rect x="0" y="90" width="1400" height="64" fill="#111111" stroke="#2a2a2a"/>
+  <text x="40" y="126" fill="#888888" font-size="12" font-family="Arial, sans-serif">API Key</text>
+  <rect x="110" y="106" width="240" height="34" rx="6" fill="#1a1a1a" stroke="#333333"/>
+  <text x="380" y="126" fill="#888888" font-size="12" font-family="Arial, sans-serif">Model</text>
+  <rect x="440" y="106" width="240" height="34" rx="6" fill="#1a1a1a" stroke="#333333"/>
+  <text x="720" y="126" fill="#888888" font-size="12" font-family="Arial, sans-serif">Temperature</text>
+  <rect x="820" y="106" width="160" height="34" rx="6" fill="#1a1a1a" stroke="#333333"/>
+
+  <rect x="0" y="154" width="1400" height="54" fill="#0a0a0a" stroke="#2a2a2a"/>
+  <rect x="40" y="165" width="200" height="32" rx="8" fill="#0a0a0a" stroke="#e8ff47"/>
+  <text x="58" y="187" fill="#e8ff47" font-size="12" font-family="Arial, sans-serif">1  Generate PRD</text>
+  <rect x="250" y="165" width="220" height="32" rx="8" fill="#0a0a0a" stroke="#333333"/>
+  <text x="268" y="187" fill="#666666" font-size="12" font-family="Arial, sans-serif">2  Create Prototype</text>
+
+  <rect x="40" y="230" width="900" height="620" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <rect x="40" y="230" width="900" height="46" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <text x="60" y="258" fill="#888888" font-size="12" font-family="Arial, sans-serif">Conversation</text>
+
+  <rect x="70" y="300" width="520" height="86" rx="10" fill="#161616" stroke="#333333"/>
+  <text x="84" y="328" fill="#f0f0f0" font-size="12" font-family="Arial, sans-serif">Assistant: Welcome. Tell me about your app idea.</text>
+  <rect x="400" y="408" width="500" height="70" rx="10" fill="#e8ff47"/>
+  <text x="414" y="438" fill="#000000" font-size="12" font-family="Arial, sans-serif">User: A tool to turn PRDs into prototypes.</text>
+
+  <rect x="70" y="760" width="780" height="56" rx="10" fill="#1a1a1a" stroke="#333333"/>
+  <rect x="860" y="760" width="60" height="56" rx="10" fill="#e8ff47"/>
+
+  <rect x="970" y="230" width="390" height="190" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <text x="990" y="258" fill="#888888" font-size="12" font-family="Arial, sans-serif">Discovery Progress</text>
+  <rect x="990" y="280" width="350" height="16" rx="8" fill="#1a1a1a"/>
+  <rect x="990" y="306" width="350" height="16" rx="8" fill="#1a1a1a"/>
+  <rect x="990" y="332" width="350" height="16" rx="8" fill="#1a1a1a"/>
+  <rect x="990" y="358" width="350" height="16" rx="8" fill="#1a1a1a"/>
+
+  <rect x="970" y="440" width="390" height="190" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <text x="990" y="468" fill="#888888" font-size="12" font-family="Arial, sans-serif">Working Notes</text>
+  <rect x="990" y="488" width="350" height="16" rx="8" fill="#1a1a1a"/>
+  <rect x="990" y="514" width="350" height="16" rx="8" fill="#1a1a1a"/>
+  <rect x="990" y="540" width="350" height="16" rx="8" fill="#1a1a1a"/>
+
+  <rect x="970" y="650" width="390" height="200" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <text x="990" y="678" fill="#888888" font-size="12" font-family="Arial, sans-serif">Actions</text>
+  <rect x="990" y="700" width="350" height="34" rx="8" fill="#e8ff47"/>
+  <rect x="990" y="742" width="350" height="34" rx="8" fill="#1a1a1a" stroke="#333333"/>
+  <rect x="990" y="784" width="350" height="34" rx="8" fill="#1a1a1a" stroke="#333333"/>
+</svg>

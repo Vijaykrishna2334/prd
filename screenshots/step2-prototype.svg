@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <rect width="1400" height="900" fill="#0a0a0a"/>
+
+  <rect x="0" y="0" width="1400" height="90" fill="#0d0d0d" stroke="#2a2a2a"/>
+  <text x="40" y="56" fill="#f0f0f0" font-size="28" font-family="Arial, sans-serif">PRD -&gt; Prototype</text>
+  <rect x="312" y="34" width="42" height="22" rx="4" fill="#e8ff47"/>
+  <text x="323" y="50" fill="#000000" font-size="12" font-family="Arial, sans-serif">v2</text>
+  <text x="1030" y="56" fill="#777777" font-size="12" font-family="Arial, sans-serif">AI-Powered Product Discovery</text>
+
+  <rect x="0" y="90" width="1400" height="64" fill="#111111" stroke="#2a2a2a"/>
+  <text x="40" y="126" fill="#888888" font-size="12" font-family="Arial, sans-serif">API Key</text>
+  <rect x="110" y="106" width="240" height="34" rx="6" fill="#1a1a1a" stroke="#333333"/>
+  <text x="380" y="126" fill="#888888" font-size="12" font-family="Arial, sans-serif">Model</text>
+  <rect x="440" y="106" width="240" height="34" rx="6" fill="#1a1a1a" stroke="#333333"/>
+  <text x="720" y="126" fill="#888888" font-size="12" font-family="Arial, sans-serif">Temperature</text>
+  <rect x="820" y="106" width="160" height="34" rx="6" fill="#1a1a1a" stroke="#333333"/>
+
+  <rect x="0" y="154" width="1400" height="54" fill="#0a0a0a" stroke="#2a2a2a"/>
+  <rect x="40" y="165" width="200" height="32" rx="8" fill="#0a0a0a" stroke="#333333"/>
+  <text x="58" y="187" fill="#666666" font-size="12" font-family="Arial, sans-serif">1  Generate PRD</text>
+  <rect x="250" y="165" width="220" height="32" rx="8" fill="#0a0a0a" stroke="#e8ff47"/>
+  <text x="268" y="187" fill="#e8ff47" font-size="12" font-family="Arial, sans-serif">2  Create Prototype</text>
+
+  <rect x="40" y="230" width="650" height="620" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <rect x="40" y="230" width="650" height="46" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <text x="60" y="258" fill="#888888" font-size="12" font-family="Arial, sans-serif">PRD Source</text>
+  <rect x="70" y="310" width="590" height="180" rx="12" fill="#0f0f0f" stroke="#333333" stroke-dasharray="8 6"/>
+  <text x="210" y="405" fill="#888888" font-size="12" font-family="Arial, sans-serif">Drop PRD here or browse</text>
+  <rect x="70" y="520" width="590" height="300" rx="10" fill="#1a1a1a" stroke="#2a2a2a"/>
+  <text x="90" y="550" fill="#888888" font-size="11" font-family="Arial, sans-serif">PRD preview text...</text>
+
+  <rect x="720" y="230" width="640" height="620" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <rect x="720" y="230" width="640" height="46" rx="12" fill="#111111" stroke="#2a2a2a"/>
+  <text x="740" y="258" fill="#888888" font-size="12" font-family="Arial, sans-serif">Generated Prototype</text>
+  <rect x="1240" y="242" width="90" height="24" rx="6" fill="#1a1a1a" stroke="#333333"/>
+  <rect x="1336" y="242" width="90" height="24" rx="6" fill="#e8ff47"/>
+
+  <rect x="750" y="310" width="580" height="470" rx="10" fill="#0f0f0f" stroke="#333333"/>
+  <text x="930" y="550" fill="#888888" font-size="12" font-family="Arial, sans-serif">Prototype preview</text>
+</svg>
